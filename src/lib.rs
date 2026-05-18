@@ -20,9 +20,12 @@
 //! cfg.write_default().unwrap();
 //! ```
 
+pub mod config_file;
 pub mod error;
+pub mod parser;
 pub mod types;
 
+pub use config_file::ConfigFile;
 pub use error::{IoError, ParseError, ValueError};
 pub use types::{
     Line, SelinuxMode, AUTORELABEL_KEY, REQUIRESEUSERS_KEY, SELINUXTYPE_DEFAULT, SELINUXTYPE_KEY,
