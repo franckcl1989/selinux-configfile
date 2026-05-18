@@ -138,11 +138,46 @@ SELINUXTYPE = targeted
 - **重复 key 后值覆盖前值**：与 libselinux 行为一致（last wins）。`get()` 返回最后一个，`set()` 更新最后一个匹配项（就地修改，不删除前项以保持格式）。`remove()` 和 `disable()` 删除/注释**所有**匹配项。
 - **`read_default()` 文件不存在时返回 `Ok(ConfigFile::new())`**（空 config），不报错。与 libselinux 一致：文件缺失 = 无策略加载。
 - **`new()` 创建完全空的 config**。写入空 config 将产生无条目文件→系统不加载策略。如需带默认值，使用 `ConfigFile::default()` 返回 `SELINUX=enforcing, SELINUXTYPE=targeted` 的最小配置。
-- **行尾兼容 `\r\n`**：解析时归一化处理，序列化时统一输出 `\n`。
-- **内联注释保留**：`SELINUX = enforcing  # mode` 中的 `  # mode` 存入 `raw_suffix`，修改 value 后原样写回。
-- **无 `=` 的行归入 `Raw` 变体**：原样保留不做解析，序列化时原文输出。
+- **行尾兼容 `\r\n`**：解析时归一化为 `\n`，序列化时统一输出 `\n`。
+- **内联注释保留**：`SELINUX = enforcing  # mode` 中 `#` 若前面是空白或行首，视为注释起始。该 `#` 及之后内容存入 `raw_suffix`，修改 value 后原样写回。注意：libselinux 不处理内联注释，本库支持此特性以完备格式保持。
+- **无 `=` 的行或空 key 的行归入 `Raw` 变体**：原样保留不做解析，序列化时原文输出。
+- **引号不作特殊处理**：与 libselinux 一致。`SELINUX="enforcing"` 解析出 value 为 `"enforcing"`（含引号），不匹配标准值。
+- **value 中含 `=` 合法**：按第一个 `=` 分隔 key 和 value，value 中后续 `=` 属于 value。`SELINUXTYPE=foo=bar` → key=`SELINUXTYPE`, value=`foo=bar`。
 - **`remove("SELINUX")` 和 `remove("SELINUXTYPE")` 允许执行但不推荐**：这两个 key 被 libselinux 视为必须，移除后系统可能不加载策略。文档警告即可，不做硬性阻止。
 - **修改 value 为相同值时仍然标记为已修改**：不做 dirty 检测，保持简单。调用方自行判断。
+
+### 解析算法
+
+每行按以下规则分类：
+
+```
+1. 保留原始行文本（含换行符），后续步骤在副本上操作
+2. 去除尾部 \n 或 \r\n
+3. 去除行首空白 → raw_leading
+4. 若剩余文本为空或全空白 → Blank(原始行文本)
+5. 若剩余文本以 # 开头 → Comment(原始行文本)
+6. 若剩余文本不含 = → Raw(原始行文本)
+7. 找第一个 = 位置：
+   a. key_raw = = 左侧文本（不去空白，保留原始大小写）
+   b. 若 key_raw 去除空白后为空 → Raw(原始行文本)
+   c. raw_separator = 紧贴 key_raw 的空白 + = + 紧贴 value 的空白
+   d. value_raw = = 右侧至行尾的全部文本（不含换行符）
+8. 解析 value：
+   a. 去除 value_raw 尾部空白和控制字符
+   b. 在剩余文本中找最后一个前面是空白（或行首）的 #：
+      若有 → value = # 之前的文本（去尾部空白），raw_suffix = # 及之后 + 之前去除的尾部空白/控制字符 + 换行符
+      若无 → value = 去除尾部空白后的文本，raw_suffix = 被去除的尾部空白/控制字符 + 换行符
+9. 该行为 Entry { key_raw, value, raw_leading, raw_separator, raw_suffix }
+```
+
+### 序列化规则
+
+```text
+Comment(s) / Blank(s) / Raw(s) → 直接写入 s
+Entry → raw_leading + key_raw + raw_separator + value + raw_suffix
+```
+
+修改操作仅改变 `value` 字段，其余字段保持原样，实现格式无损回写。
 
 ---
 
@@ -265,7 +300,7 @@ impl ConfigFile {
     /// 设置 SELINUX，值已类型安全无需额外校验
     pub fn set_selinux(&mut self, mode: SelinuxMode);
 
-    /// 设置 SELINUXTYPE，校验：非空、非纯空白
+    /// 设置 SELINUXTYPE，校验：非空（trim 后）、不含控制字符(0x00-0x1F,0x7F)、不含 '/'
     pub fn set_selinuxtype(&mut self, policy_type: &str) -> Result<(), ValueError>;
 
     /// 设置 REQUIRESEUSERS
@@ -286,7 +321,8 @@ impl ConfigFile {
     /// 获取任意 key 的逻辑值，key 匹配大小写不敏感，存在重复 key 时返回最后一个
     pub fn get(&self, key: &str) -> Option<&str>;
 
-    /// 设置任意 key 的值，key 存在则就地修改最后一个匹配项的 value（保留格式），
+    /// 设置任意 key 的值。key 为空字符串时静默无操作。
+    /// key 存在则就地修改最后一个匹配项的 value（保留格式），
     /// key 不存在则追加到文件末尾，新行格式为 `KEY=VALUE\n`
     pub fn set(&mut self, key: &str, value: &str);
 
