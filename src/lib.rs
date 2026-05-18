@@ -23,6 +23,7 @@
 pub mod config_file;
 pub mod error;
 pub mod parser;
+pub mod serializer;
 pub mod types;
 
 pub use config_file::ConfigFile;
