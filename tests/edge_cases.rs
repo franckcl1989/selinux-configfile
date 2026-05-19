@@ -114,3 +114,23 @@ fn test_config_is_send_sync() {
     assert_send_sync::<SelinuxMode>();
     assert_send_sync::<Line>();
 }
+
+/// Serde roundtrip: serialize then deserialize produces identical config
+#[cfg(feature = "serde")]
+#[test]
+fn test_serde_roundtrip() {
+    let cfg = ConfigFile::default();
+    let json = serde_json::to_string(&cfg).unwrap();
+    let cfg2: ConfigFile = serde_json::from_str(&json).unwrap();
+    assert_eq!(cfg, cfg2);
+}
+
+/// Serde: SelinuxMode roundtrip
+#[cfg(feature = "serde")]
+#[test]
+fn test_serde_selinux_mode() {
+    let mode = SelinuxMode::Enforcing;
+    let json = serde_json::to_string(&mode).unwrap();
+    let mode2: SelinuxMode = serde_json::from_str(&json).unwrap();
+    assert_eq!(mode, mode2);
+}
