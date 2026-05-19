@@ -103,11 +103,12 @@ impl ConfigFile {
     }
 
     /// Helper: interpret a boolean config value.
-    /// `"1"` → `Some(true)`, `"0"` → `Some(false)`, anything else → `None`.
+    /// `"1"` / `"true"` → `Some(true)`, `"0"` / `"false"` → `Some(false)`,
+    /// anything else → `None`.  String matching is case-insensitive.
     pub fn get_bool(&self, key: &str) -> Option<bool> {
-        self.get(key).and_then(|v| match v {
-            "1" => Some(true),
-            "0" => Some(false),
+        self.get(key).and_then(|v| match v.to_lowercase().as_str() {
+            "1" | "true" => Some(true),
+            "0" | "false" => Some(false),
             _ => None,
         })
     }
