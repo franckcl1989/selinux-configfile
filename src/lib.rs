@@ -1,4 +1,4 @@
-//! # selinux-configfile
+//! # selinux\_configfile
 //!
 //! 100% safe Rust parser and writer for `/etc/selinux/config` with full
 //! format preservation.  Zero `unsafe` code.
