@@ -22,6 +22,7 @@
 
 pub mod config_file;
 pub mod error;
+pub mod io;
 pub mod parser;
 pub mod serializer;
 pub mod types;
