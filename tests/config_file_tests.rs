@@ -197,7 +197,7 @@ fn test_add_blank_line() {
 // --- validate ---
 #[test]
 fn test_validate_all_valid() {
-    let cfg = ConfigFile::default();
+    let cfg = ConfigFile::minimal();
     let errors = cfg.validate();
     assert!(errors.is_empty());
 }

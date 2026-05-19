@@ -291,6 +291,14 @@ impl ConfigFile {
 
 impl Default for ConfigFile {
     fn default() -> Self {
+        ConfigFile::new()
+    }
+}
+
+impl ConfigFile {
+    /// Create a config pre-populated with the minimal valid SELinux setup:
+    /// `SELINUX=enforcing`, `SELINUXTYPE=targeted`.
+    pub fn minimal() -> Self {
         let mut cfg = ConfigFile::new();
         cfg.lines.push(Line::Entry {
             key_raw: SELINUX_KEY.to_string(),

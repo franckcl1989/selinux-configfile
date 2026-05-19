@@ -54,7 +54,7 @@ fn test_blank_lines_skipped() {
 /// libselinux: SELINUXTYPE default is "targeted"
 #[test]
 fn test_default_selinuxtype_in_default_config() {
-    let cfg = ConfigFile::default();
+    let cfg = ConfigFile::minimal();
     assert_eq!(cfg.selinuxtype(), Some("targeted"));
 }
 

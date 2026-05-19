@@ -7,7 +7,7 @@ use selinux_configfile::ConfigFile;
 
 fn main() {
     // set_selinuxtype validates on the spot
-    let mut cfg = ConfigFile::default();
+    let mut cfg = ConfigFile::minimal();
 
     match cfg.set_selinuxtype("") {
         Ok(()) => println!("ok"),

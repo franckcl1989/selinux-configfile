@@ -92,7 +92,7 @@ fn test_value_with_only_spaces() {
 /// Default config is valid
 #[test]
 fn test_config_default_is_valid() {
-    let cfg = ConfigFile::default();
+    let cfg = ConfigFile::minimal();
     let errors = cfg.validate();
     assert!(errors.is_empty());
 }
@@ -119,7 +119,7 @@ fn test_config_is_send_sync() {
 #[cfg(feature = "serde")]
 #[test]
 fn test_serde_roundtrip() {
-    let cfg = ConfigFile::default();
+    let cfg = ConfigFile::minimal();
     let json = serde_json::to_string(&cfg).unwrap();
     let cfg2: ConfigFile = serde_json::from_str(&json).unwrap();
     assert_eq!(cfg, cfg2);

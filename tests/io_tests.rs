@@ -11,7 +11,13 @@ fn temp_config_path() -> PathBuf {
 
 fn cleanup(path: &PathBuf) {
     fs::remove_file(path).ok();
-    fs::remove_file(&path.with_extension("tmp")).ok();
+    let tmp_name = format!(
+        ".{}.tmp",
+        path.file_name()
+            .and_then(|n| n.to_str())
+            .unwrap_or("config")
+    );
+    fs::remove_file(&path.with_file_name(tmp_name)).ok();
 }
 
 #[test]
@@ -33,7 +39,7 @@ fn test_read_from_nonexistent_file() {
 #[test]
 fn test_write_to_file() {
     let path = temp_config_path();
-    let cfg = ConfigFile::default();
+    let cfg = ConfigFile::minimal();
     cfg.write_to(&path).unwrap();
     let read_back = fs::read_to_string(&path).unwrap();
     assert!(read_back.contains("SELINUX=enforcing"));
@@ -56,9 +62,12 @@ fn test_roundtrip_file() {
 #[test]
 fn test_atomic_write_no_corruption() {
     let path = temp_config_path();
-    let cfg = ConfigFile::default();
+    let cfg = ConfigFile::minimal();
     cfg.write_to(&path).unwrap();
-    let tmp_path = path.with_extension("tmp");
+    let tmp_path = path.with_file_name(format!(
+        ".{}.tmp",
+        path.file_name().and_then(|n| n.to_str()).unwrap()
+    ));
     assert!(!tmp_path.exists());
     let cfg2 = ConfigFile::read_from(&path).unwrap();
     assert_eq!(cfg2.to_string(), cfg.to_string());

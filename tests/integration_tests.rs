@@ -50,7 +50,7 @@ fn test_full_lifecycle() {
 /// Multiple sequential modifications
 #[test]
 fn test_multiple_modifications() {
-    let mut cfg = ConfigFile::default();
+    let mut cfg = ConfigFile::minimal();
     cfg.set_selinux(SelinuxMode::Permissive);
     cfg.set_selinux(SelinuxMode::Enforcing);
     cfg.set_selinux(SelinuxMode::Disabled);
@@ -104,7 +104,7 @@ fn test_disable_key_end_to_end() {
 /// remove all keys from a config
 #[test]
 fn test_remove_all_keys() {
-    let mut cfg = ConfigFile::default();
+    let mut cfg = ConfigFile::minimal();
     cfg.remove("SELINUX");
     cfg.remove("SELINUXTYPE");
     assert!(cfg.is_empty());
