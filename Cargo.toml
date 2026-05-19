@@ -1,11 +1,11 @@
 [package]
 name = "selinux_configfile"
-version = "0.1.2"
+version = "0.1.3"
 edition = "2024"
-rust-version = "1.85"
+rust-version = "1.95"
 description = "100% safe Rust parser and writer for /etc/selinux/config with format preservation"
 license = "MIT"
-repository = "https://github.com/franck/selinux-configfile"
+repository = "https://github.com/franckcl1989/selinux-configfile"
 documentation = "https://docs.rs/selinux_configfile"
 keywords = ["selinux", "config", "parser", "linux"]
 categories = ["config", "os::linux-apis"]

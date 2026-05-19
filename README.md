@@ -2,8 +2,8 @@
 
 [![Crates.io](https://img.shields.io/crates/v/selinux_configfile)](https://crates.io/crates/selinux_configfile)
 [![docs.rs](https://img.shields.io/docsrs/selinux_configfile)](https://docs.rs/selinux_configfile)
-[![CI](https://github.com/franck/selinux-configfile/actions/workflows/ci.yml/badge.svg)](https://github.com/franck/selinux-configfile/actions/workflows/ci.yml)
-[![MSRV](https://img.shields.io/badge/rustc-1.85+-blue.svg)](https://blog.rust-lang.org/2025/02/20/Rust-1.85.0.html)
+[![CI](https://github.com/franckcl1989/selinux-configfile/actions/workflows/ci.yml/badge.svg)](https://github.com/franckcl1989/selinux-configfile/actions/workflows/ci.yml)
+[![MSRV](https://img.shields.io/badge/rustc-1.95+-blue.svg)](https://blog.rust-lang.org/2025/12/11/Rust-1.95.0.html)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 100% safe Rust parser and writer for `/etc/selinux/config` with format-preserving writes, type-safe API, and atomic file updates. Zero dependencies beyond `std` (`serde` optional).
