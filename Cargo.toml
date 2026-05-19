@@ -9,6 +9,7 @@ documentation = "https://docs.rs/selinux_configfile"
 keywords = ["selinux", "config", "parser", "linux"]
 categories = ["config", "os::linux-apis"]
 readme = "README.md"
+exclude = ["docs/", ".claude/", ".github/"]
 
 [dependencies]
 
