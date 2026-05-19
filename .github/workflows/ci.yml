@@ -12,7 +12,7 @@ env:
 
 jobs:
   test:
-    name: test (rust ${{ matrix.rust }})
+    name: test (${{ matrix.rust }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -26,6 +26,16 @@ jobs:
       - run: cargo test --all-features
       - run: cargo test --no-default-features
 
+  examples:
+    name: examples
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: stable
+      - run: cargo build --examples --all-features
+
   clippy:
     name: clippy
     runs-on: ubuntu-latest
@@ -36,6 +46,7 @@ jobs:
           toolchain: stable
           components: clippy
       - run: cargo clippy --all-features -- -D warnings
+      - run: cargo clippy --no-default-features -- -D warnings
 
   rustfmt:
     name: rustfmt
