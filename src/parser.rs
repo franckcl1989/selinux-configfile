@@ -1,3 +1,6 @@
+//! Config file parser. Reads a string and produces a [`ConfigFile`] with
+//! all formatting preserved via [`Line`](crate::Line) variants.
+
 use crate::error::ParseError;
 use crate::types::Line;
 use crate::config_file::ConfigFile;

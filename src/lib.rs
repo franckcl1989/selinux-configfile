@@ -61,6 +61,9 @@
 //! assert_eq!(input, output);
 //! ```
 
+#![forbid(unsafe_code)]
+#![deny(missing_docs)]
+
 pub mod config_file;
 pub mod error;
 pub mod io;
@@ -71,6 +74,6 @@ pub mod types;
 pub use config_file::ConfigFile;
 pub use error::{IoError, ParseError, ValueError};
 pub use types::{
-    Line, SelinuxMode, AUTORELABEL_KEY, REQUIRESEUSERS_KEY, SELINUXTYPE_DEFAULT, SELINUXTYPE_KEY,
-    SELINUX_KEY, SETLOCALDEFS_KEY,
+    Line, SelinuxMode, AUTORELABEL_KEY, REQUIRESEUSERS_KEY, SELINUXTYPE_DEFAULT,
+    SELINUXTYPE_KEY, SELINUX_KEY, SETLOCALDEFS_KEY,
 };

@@ -1,3 +1,7 @@
+//! File I/O for [`ConfigFile`]: atomic reads and writes with
+//! [`read_from`](ConfigFile::read_from), [`write_to`](ConfigFile::write_to),
+//! and the [`SELINUX_CONFIG_PATH`] constant.
+
 use std::fs;
 use std::io::Read;
 use std::path::Path;

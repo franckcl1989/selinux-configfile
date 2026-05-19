@@ -1,3 +1,6 @@
+//! The [`ConfigFile`] type — the main high-level API for reading, modifying,
+//! validating, and writing SELinux config files.
+
 use std::collections::HashSet;
 
 use crate::error::ValueError;
@@ -268,6 +271,7 @@ impl ConfigFile {
 
     /// Update the last entry matching `key` (case-insensitive) with a new
     /// value, or append a new entry if none matches.
+    #[doc(hidden)]
     pub(crate) fn set_inner(&mut self, key: &str, value: &str) {
         for line in self.lines.iter_mut().rev() {
             if let Line::Entry { key_raw, value: v, .. } = line
