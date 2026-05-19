@@ -28,8 +28,3 @@ impl fmt::Display for ConfigFile {
     }
 }
 
-impl ConfigFile {
-    pub fn to_string(&self) -> String {
-        format!("{}", self)
-    }
-}

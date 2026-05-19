@@ -10,21 +10,6 @@ pub enum SelinuxMode {
     Disabled,
 }
 
-impl SelinuxMode {
-    /// Parse from a string, case-insensitive.
-    pub fn from_str(s: &str) -> Result<SelinuxMode, ValueError> {
-        match s.to_lowercase().as_str() {
-            "enforcing" => Ok(SelinuxMode::Enforcing),
-            "permissive" => Ok(SelinuxMode::Permissive),
-            "disabled" => Ok(SelinuxMode::Disabled),
-            _ => Err(ValueError {
-                key: String::from("SELINUX"),
-                message: format!("invalid SELinux mode: '{}'", s),
-            }),
-        }
-    }
-}
-
 impl fmt::Display for SelinuxMode {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
@@ -38,7 +23,15 @@ impl fmt::Display for SelinuxMode {
 impl FromStr for SelinuxMode {
     type Err = ValueError;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        SelinuxMode::from_str(s)
+        match s.to_ascii_lowercase().as_str() {
+            "enforcing" => Ok(SelinuxMode::Enforcing),
+            "permissive" => Ok(SelinuxMode::Permissive),
+            "disabled" => Ok(SelinuxMode::Disabled),
+            _ => Err(ValueError {
+                key: String::from("SELINUX"),
+                message: format!("invalid SELinux mode: '{}'", s),
+            }),
+        }
     }
 }
 

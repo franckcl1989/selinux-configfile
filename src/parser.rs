@@ -92,10 +92,10 @@ pub fn parse(input: &str) -> Result<ConfigFile, ParseError> {
 ///
 /// Given the text after `=` with leading whitespace already consumed into
 /// `raw_separator`, this returns:
-/// - `value`:           the logical value (trailing whitespace and inline
-///                      comments stripped)
-/// - `comment_suffix`:  everything that was stripped from the value to be
-///                      stored in `raw_suffix` (inline comment + whitespace)
+/// - `value`: the logical value (trailing whitespace and inline comments
+///   stripped)
+/// - `comment_suffix`: everything that was stripped from the value to be
+///   stored in `raw_suffix` (inline comment + whitespace)
 fn parse_value(value_body: &str) -> (String, String) {
     // Step 8a: strip trailing whitespace and ASCII control characters
     let trimmed_body = value_body
