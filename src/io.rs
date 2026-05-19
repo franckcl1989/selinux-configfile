@@ -2,11 +2,11 @@
 //! [`read_from`](ConfigFile::read_from), [`write_to`](ConfigFile::write_to),
 //! and the [`SELINUX_CONFIG_PATH`] constant.
 
+use crate::config_file::ConfigFile;
+use crate::error::IoError;
 use std::fs;
 use std::io::Read;
 use std::path::Path;
-use crate::config_file::ConfigFile;
-use crate::error::IoError;
 
 /// The default SELinux configuration file path.
 pub const SELINUX_CONFIG_PATH: &str = "/etc/selinux/config";

@@ -33,7 +33,11 @@ fn test_full_lifecycle() {
     cfg.write_to(&path).unwrap();
 
     let output = fs::read_to_string(&path).unwrap();
-    assert!(output.contains("SELINUX=permissive\n"), "output: {}", output);
+    assert!(
+        output.contains("SELINUX=permissive\n"),
+        "output: {}",
+        output
+    );
     assert!(output.contains("SELINUXTYPE=mls\n"));
     assert!(output.contains("REQUIRESEUSERS=1\n"));
     assert!(output.contains("# This file controls the state of SELinux on the system.\n"));

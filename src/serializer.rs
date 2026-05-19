@@ -1,9 +1,9 @@
 //! Serialization of [`ConfigFile`] back to a string with exact format
 //! preservation via the [`Display`](std::fmt::Display) trait.
 
-use std::fmt;
 use crate::config_file::ConfigFile;
 use crate::types::Line;
+use std::fmt;
 
 impl fmt::Display for ConfigFile {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -30,4 +30,3 @@ impl fmt::Display for ConfigFile {
         Ok(())
     }
 }
-

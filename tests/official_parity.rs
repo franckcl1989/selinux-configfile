@@ -64,7 +64,12 @@ fn test_selinux_value_case_insensitive() {
     for val in &["ENFORCING", "Enforcing", "enforcing", "ENFORCing"] {
         let input = format!("SELINUX={}\nSELINUXTYPE=targeted\n", val);
         let cfg = ConfigFile::parse(&input).unwrap();
-        assert_eq!(cfg.selinux(), Some(SelinuxMode::Enforcing), "failed for value: {}", val);
+        assert_eq!(
+            cfg.selinux(),
+            Some(SelinuxMode::Enforcing),
+            "failed for value: {}",
+            val
+        );
     }
 }
 
@@ -80,12 +85,18 @@ fn test_require_seusers_atoi_parsing() {
 #[test]
 fn test_require_seusers_true_false_strings() {
     for val in &["true", "True", "TRUE"] {
-        let input = format!("SELINUX=enforcing\nSELINUXTYPE=targeted\nREQUIRESEUSERS={}\n", val);
+        let input = format!(
+            "SELINUX=enforcing\nSELINUXTYPE=targeted\nREQUIRESEUSERS={}\n",
+            val
+        );
         let cfg = ConfigFile::parse(&input).unwrap();
         assert!(cfg.require_seusers().unwrap(), "failed for: {}", val);
     }
     for val in &["false", "False", "FALSE"] {
-        let input = format!("SELINUX=enforcing\nSELINUXTYPE=targeted\nREQUIRESEUSERS={}\n", val);
+        let input = format!(
+            "SELINUX=enforcing\nSELINUXTYPE=targeted\nREQUIRESEUSERS={}\n",
+            val
+        );
         let cfg = ConfigFile::parse(&input).unwrap();
         assert!(!cfg.require_seusers().unwrap(), "failed for: {}", val);
     }

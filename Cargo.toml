@@ -2,6 +2,7 @@
 name = "selinux_configfile"
 version = "0.1.0"
 edition = "2024"
+rust-version = "1.85"
 description = "100% safe Rust parser and writer for /etc/selinux/config with format preservation"
 license = "MIT"
 repository = "https://github.com/franck/selinux-configfile"
@@ -9,9 +10,31 @@ documentation = "https://docs.rs/selinux_configfile"
 keywords = ["selinux", "config", "parser", "linux"]
 categories = ["config", "os::linux-apis"]
 readme = "README.md"
-exclude = ["docs/", ".claude/", ".github/"]
+exclude = ["docs/", ".claude/"]
+
+[features]
+default = ["std"]
+std = []
+serde = ["dep:serde"]
 
 [dependencies]
+serde = { version = "1", features = ["derive"], optional = true }
 
 [dev-dependencies]
 tempfile = "3"
+
+[[example]]
+name = "basic_read_write"
+path = "examples/basic_read_write.rs"
+
+[[example]]
+name = "format_preservation"
+path = "examples/format_preservation.rs"
+
+[[example]]
+name = "validation"
+path = "examples/validation.rs"
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--generate-link-to-definition"]

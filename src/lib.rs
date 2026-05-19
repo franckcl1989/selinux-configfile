@@ -74,6 +74,6 @@ pub mod types;
 pub use config_file::ConfigFile;
 pub use error::{IoError, ParseError, ValueError};
 pub use types::{
-    Line, SelinuxMode, AUTORELABEL_KEY, REQUIRESEUSERS_KEY, SELINUXTYPE_DEFAULT,
-    SELINUXTYPE_KEY, SELINUX_KEY, SETLOCALDEFS_KEY,
+    AUTORELABEL_KEY, Line, REQUIRESEUSERS_KEY, SELINUX_KEY, SELINUXTYPE_DEFAULT, SELINUXTYPE_KEY,
+    SETLOCALDEFS_KEY, SelinuxMode,
 };

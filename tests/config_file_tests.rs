@@ -1,9 +1,7 @@
-use selinux_configfile::{ConfigFile, SelinuxMode, Line};
+use selinux_configfile::{ConfigFile, Line, SelinuxMode};
 
 fn make_test_config() -> ConfigFile {
-    ConfigFile::parse(
-        "# header\n\nSELINUX=enforcing\nSELINUXTYPE=targeted\n\n# footer\n"
-    ).unwrap()
+    ConfigFile::parse("# header\n\nSELINUX=enforcing\nSELINUXTYPE=targeted\n\n# footer\n").unwrap()
 }
 
 // --- get ---
@@ -61,7 +59,11 @@ fn test_generic_set_known_key_normalized() {
     let mut cfg = ConfigFile::new();
     cfg.set("selinux", "enforcing");
     let output = cfg.to_string();
-    assert!(output.contains("SELINUX=enforcing"), "expected canonical key, got: {}", output);
+    assert!(
+        output.contains("SELINUX=enforcing"),
+        "expected canonical key, got: {}",
+        output
+    );
 }
 
 // --- remove ---
@@ -96,7 +98,11 @@ fn test_remove_all_duplicates() {
     assert!(cfg.remove("SELINUX"));
     assert_eq!(cfg.selinux(), None);
     let output = cfg.to_string();
-    assert!(!output.contains("SELINUX="), "output should not contain SELINUX= entries, got: {}", output);
+    assert!(
+        !output.contains("SELINUX="),
+        "output should not contain SELINUX= entries, got: {}",
+        output
+    );
 }
 
 // --- disable ---

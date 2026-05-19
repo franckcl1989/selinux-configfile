@@ -6,12 +6,13 @@ use std::collections::HashSet;
 use crate::error::ValueError;
 use crate::parser;
 use crate::types::{
-    Line, SelinuxMode, AUTORELABEL_KEY, REQUIRESEUSERS_KEY, SELINUXTYPE_DEFAULT, SELINUXTYPE_KEY,
-    SELINUX_KEY, SETLOCALDEFS_KEY,
+    AUTORELABEL_KEY, Line, REQUIRESEUSERS_KEY, SELINUX_KEY, SELINUXTYPE_DEFAULT, SELINUXTYPE_KEY,
+    SETLOCALDEFS_KEY, SelinuxMode,
 };
 
 /// A parsed `/etc/selinux/config` file with format-preserving lines.
 #[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct ConfigFile {
     pub(crate) lines: Vec<Line>,
 }
@@ -51,18 +52,15 @@ impl ConfigFile {
     /// Generic getter: case-insensitive, last-wins for duplicate keys.
     #[must_use]
     pub fn get(&self, key: &str) -> Option<&str> {
-        self.lines
-            .iter()
-            .rev()
-            .find_map(|line| {
-                if let Line::Entry { key_raw, value, .. } = line
-                    && key_raw.eq_ignore_ascii_case(key)
-                {
-                    Some(value.as_str())
-                } else {
-                    None
-                }
-            })
+        self.lines.iter().rev().find_map(|line| {
+            if let Line::Entry { key_raw, value, .. } = line
+                && key_raw.eq_ignore_ascii_case(key)
+            {
+                Some(value.as_str())
+            } else {
+                None
+            }
+        })
     }
 
     /// Get the SELinux mode.
@@ -101,11 +99,12 @@ impl ConfigFile {
     /// anything else → `None`.  Matching is case-insensitive.
     #[must_use]
     pub fn get_bool(&self, key: &str) -> Option<bool> {
-        self.get(key).and_then(|v| match v.to_ascii_lowercase().as_str() {
-            "1" | "true" => Some(true),
-            "0" | "false" => Some(false),
-            _ => None,
-        })
+        self.get(key)
+            .and_then(|v| match v.to_ascii_lowercase().as_str() {
+                "1" | "true" => Some(true),
+                "0" | "false" => Some(false),
+                _ => None,
+            })
     }
 
     // -- typed setters --
@@ -222,8 +221,7 @@ impl ConfigFile {
 
     /// Append a comment line (`# <comment>\n`).
     pub fn add_comment_line(&mut self, comment: &str) {
-        self.lines
-            .push(Line::Comment(format!("# {}\n", comment)));
+        self.lines.push(Line::Comment(format!("# {}\n", comment)));
     }
 
     /// Append a blank line (`\n`).
@@ -244,9 +242,7 @@ impl ConfigFile {
             if let Line::Entry { key_raw, value, .. } = line {
                 let key_upper = key_raw.to_ascii_uppercase();
                 match key_upper.as_str() {
-                    "SELINUX"
-                        if value.parse::<SelinuxMode>().is_err() =>
-                    {
+                    "SELINUX" if value.parse::<SelinuxMode>().is_err() => {
                         errors.push(ValueError {
                             key: SELINUX_KEY.into(),
                             message: format!("invalid SELinux mode: '{}'", value),
@@ -274,7 +270,9 @@ impl ConfigFile {
     #[doc(hidden)]
     pub(crate) fn set_inner(&mut self, key: &str, value: &str) {
         for line in self.lines.iter_mut().rev() {
-            if let Line::Entry { key_raw, value: v, .. } = line
+            if let Line::Entry {
+                key_raw, value: v, ..
+            } = line
                 && key_raw.eq_ignore_ascii_case(key)
             {
                 *v = value.to_string();

@@ -3,21 +3,42 @@ use std::str::FromStr;
 
 #[test]
 fn test_from_str_enforcing() {
-    assert_eq!(SelinuxMode::from_str("enforcing").unwrap(), SelinuxMode::Enforcing);
-    assert_eq!(SelinuxMode::from_str("ENFORCING").unwrap(), SelinuxMode::Enforcing);
-    assert_eq!(SelinuxMode::from_str("Enforcing").unwrap(), SelinuxMode::Enforcing);
+    assert_eq!(
+        SelinuxMode::from_str("enforcing").unwrap(),
+        SelinuxMode::Enforcing
+    );
+    assert_eq!(
+        SelinuxMode::from_str("ENFORCING").unwrap(),
+        SelinuxMode::Enforcing
+    );
+    assert_eq!(
+        SelinuxMode::from_str("Enforcing").unwrap(),
+        SelinuxMode::Enforcing
+    );
 }
 
 #[test]
 fn test_from_str_permissive() {
-    assert_eq!(SelinuxMode::from_str("permissive").unwrap(), SelinuxMode::Permissive);
-    assert_eq!(SelinuxMode::from_str("PERMISSIVE").unwrap(), SelinuxMode::Permissive);
+    assert_eq!(
+        SelinuxMode::from_str("permissive").unwrap(),
+        SelinuxMode::Permissive
+    );
+    assert_eq!(
+        SelinuxMode::from_str("PERMISSIVE").unwrap(),
+        SelinuxMode::Permissive
+    );
 }
 
 #[test]
 fn test_from_str_disabled() {
-    assert_eq!(SelinuxMode::from_str("disabled").unwrap(), SelinuxMode::Disabled);
-    assert_eq!(SelinuxMode::from_str("DISABLED").unwrap(), SelinuxMode::Disabled);
+    assert_eq!(
+        SelinuxMode::from_str("disabled").unwrap(),
+        SelinuxMode::Disabled
+    );
+    assert_eq!(
+        SelinuxMode::from_str("DISABLED").unwrap(),
+        SelinuxMode::Disabled
+    );
 }
 
 #[test]
@@ -54,7 +75,10 @@ fn test_constant_values() {
 fn test_line_comment() {
     use selinux_configfile::Line;
     let line = Line::Comment(String::from("# SELinux configuration\n"));
-    assert_eq!(line, Line::Comment(String::from("# SELinux configuration\n")));
+    assert_eq!(
+        line,
+        Line::Comment(String::from("# SELinux configuration\n"))
+    );
 }
 
 #[test]
@@ -101,7 +125,11 @@ fn test_line_entry_with_spaces() {
         raw_suffix: String::from("  # mode comment\n"),
     };
     match &entry {
-        Line::Entry { raw_separator, raw_suffix, .. } => {
+        Line::Entry {
+            raw_separator,
+            raw_suffix,
+            ..
+        } => {
             assert_eq!(raw_separator, " = ");
             assert_eq!(raw_suffix, "  # mode comment\n");
         }

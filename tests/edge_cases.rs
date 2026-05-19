@@ -1,4 +1,4 @@
-use selinux_configfile::{ConfigFile, SelinuxMode, Line};
+use selinux_configfile::{ConfigFile, Line, SelinuxMode};
 
 /// Very long value should roundtrip correctly
 #[test]
@@ -53,7 +53,11 @@ fn test_preserve_indented_entry() {
     let mut cfg = ConfigFile::parse(input).unwrap();
     cfg.set_selinux(SelinuxMode::Permissive);
     let output = cfg.to_string();
-    assert!(output.contains("  SELINUX=permissive\n"), "output: {}", output);
+    assert!(
+        output.contains("  SELINUX=permissive\n"),
+        "output: {}",
+        output
+    );
 }
 
 /// Config with only SELINUXTYPE, no SELINUX

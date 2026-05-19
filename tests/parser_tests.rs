@@ -1,4 +1,4 @@
-use selinux_configfile::{ConfigFile, SelinuxMode, Line};
+use selinux_configfile::{ConfigFile, Line, SelinuxMode};
 
 #[test]
 fn test_parse_minimal() {
@@ -163,7 +163,11 @@ fn test_parse_inline_comment() {
     let cfg = ConfigFile::parse(input).unwrap();
     assert_eq!(cfg.selinux(), Some(SelinuxMode::Enforcing));
     if let Line::Entry { raw_suffix, .. } = &cfg.lines()[0] {
-        assert!(raw_suffix.contains("# this is a comment"), "raw_suffix: {:?}", raw_suffix);
+        assert!(
+            raw_suffix.contains("# this is a comment"),
+            "raw_suffix: {:?}",
+            raw_suffix
+        );
     } else {
         panic!("expected Entry");
     }

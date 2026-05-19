@@ -1,11 +1,12 @@
 //! Core types for SELinux config: [`SelinuxMode`], [`Line`], and key constants.
 
+use crate::error::ValueError;
 use std::fmt;
 use std::str::FromStr;
-use crate::error::ValueError;
 
 /// SELinux enforcement mode.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum SelinuxMode {
     /// SELinux policy is enforced; access denials are logged and blocked.
     Enforcing,
@@ -56,6 +57,7 @@ pub const SELINUXTYPE_DEFAULT: &str = "targeted";
 
 /// One line in the config file, preserving original formatting.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum Line {
     /// A `#` comment line, preserved verbatim including leading whitespace
     /// and trailing newline (e.g., `"# This is a comment\n"`).

@@ -1,9 +1,9 @@
 //! Config file parser. Reads a string and produces a [`ConfigFile`] with
-//! all formatting preserved via [`Line`](crate::Line) variants.
+//! all formatting preserved via [`Line`] variants.
 
+use crate::config_file::ConfigFile;
 use crate::error::ParseError;
 use crate::types::Line;
-use crate::config_file::ConfigFile;
 
 /// Parse a `/etc/selinux/config` string into a [`ConfigFile`].
 ///
@@ -16,18 +16,17 @@ pub fn parse(input: &str) -> Result<ConfigFile, ParseError> {
 
     while !remaining.is_empty() {
         // ---- extract one line ----
-        let (orig_line, line_content, has_newline) =
-            if let Some(pos) = remaining.find('\n') {
-                let orig = &remaining[..=pos]; // includes '\n'
-                let content = &remaining[..pos];
-                remaining = &remaining[pos + 1..];
-                (orig.to_string(), content.to_string(), true)
-            } else {
-                let orig = remaining.to_string();
-                let content = remaining.to_string();
-                remaining = "";
-                (orig, content, false)
-            };
+        let (orig_line, line_content, has_newline) = if let Some(pos) = remaining.find('\n') {
+            let orig = &remaining[..=pos]; // includes '\n'
+            let content = &remaining[..pos];
+            remaining = &remaining[pos + 1..];
+            (orig.to_string(), content.to_string(), true)
+        } else {
+            let orig = remaining.to_string();
+            let content = remaining.to_string();
+            remaining = "";
+            (orig, content, false)
+        };
 
         // ---- classify and parse the line ----
         let trimmed = line_content.trim_start();
@@ -70,8 +69,7 @@ pub fn parse(input: &str) -> Result<ConfigFile, ParseError> {
 
             // ---- parse value ----
             let newline_part = if has_newline { "\n" } else { "" };
-            let (value, comment_suffix) =
-                parse_value(after_eq_trimmed);
+            let (value, comment_suffix) = parse_value(after_eq_trimmed);
 
             let raw_suffix = format!("{}{}", comment_suffix, newline_part);
 
@@ -101,21 +99,18 @@ pub fn parse(input: &str) -> Result<ConfigFile, ParseError> {
 ///   stored in `raw_suffix` (inline comment + whitespace)
 fn parse_value(value_body: &str) -> (String, String) {
     // Step 8a: strip trailing whitespace and ASCII control characters
-    let trimmed_body = value_body
-        .trim_end_matches(|c: char| c.is_ascii_whitespace() || c.is_ascii_control());
+    let trimmed_body =
+        value_body.trim_end_matches(|c: char| c.is_ascii_whitespace() || c.is_ascii_control());
     let trailing_stripped = &value_body[trimmed_body.len()..];
 
     // Step 8b: find inline comment — '#' preceded by whitespace (or at start)
-    if let Some(pos) = trimmed_body
-        .match_indices('#')
-        .find_map(|(p, _)| {
-            if p == 0 || trimmed_body.as_bytes()[p - 1].is_ascii_whitespace() {
-                Some(p)
-            } else {
-                None
-            }
-        })
-    {
+    if let Some(pos) = trimmed_body.match_indices('#').find_map(|(p, _)| {
+        if p == 0 || trimmed_body.as_bytes()[p - 1].is_ascii_whitespace() {
+            Some(p)
+        } else {
+            None
+        }
+    }) {
         // Step 8c: inline comment found
         let value_area = &trimmed_body[..pos];
         let value = value_area.trim_end().to_string();
