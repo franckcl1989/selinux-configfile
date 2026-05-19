@@ -53,13 +53,12 @@ impl ConfigFile {
     #[must_use]
     pub fn get(&self, key: &str) -> Option<&str> {
         self.lines.iter().rev().find_map(|line| {
-            if let Line::Entry { key_raw, value, .. } = line
-                && key_raw.eq_ignore_ascii_case(key)
-            {
-                Some(value.as_str())
-            } else {
-                None
+            if let Line::Entry { key_raw, value, .. } = line {
+                if key_raw.eq_ignore_ascii_case(key) {
+                    return Some(value.as_str());
+                }
             }
+            None
         })
     }
 
@@ -188,14 +187,15 @@ impl ConfigFile {
                 raw_separator,
                 raw_suffix,
             } = line
-                && key_raw.eq_ignore_ascii_case(key)
             {
-                let commented = format!(
-                    "{}# {}{}{}{}",
-                    raw_leading, key_raw, raw_separator, value, raw_suffix
-                );
-                *line = Line::Comment(commented);
-                disabled = true;
+                if key_raw.eq_ignore_ascii_case(key) {
+                    let commented = format!(
+                        "{}# {}{}{}{}",
+                        raw_leading, key_raw, raw_separator, value, raw_suffix
+                    );
+                    *line = Line::Comment(commented);
+                    disabled = true;
+                }
             }
         }
         disabled
@@ -273,10 +273,11 @@ impl ConfigFile {
             if let Line::Entry {
                 key_raw, value: v, ..
             } = line
-                && key_raw.eq_ignore_ascii_case(key)
             {
-                *v = value.to_string();
-                return;
+                if key_raw.eq_ignore_ascii_case(key) {
+                    *v = value.to_string();
+                    return;
+                }
             }
         }
         self.lines.push(Line::Entry {
