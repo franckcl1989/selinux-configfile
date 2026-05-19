@@ -2,6 +2,12 @@
 name = "selinux_configfile"
 version = "0.1.0"
 edition = "2024"
+description = "100% safe Rust parser and writer for /etc/selinux/config with format preservation"
+license = "MIT"
+repository = "https://github.com/franck/selinux-configfile"
+keywords = ["selinux", "config", "parser", "linux"]
+categories = ["config", "os::linux-apis"]
+readme = "README.md"
 
 [dependencies]
 
