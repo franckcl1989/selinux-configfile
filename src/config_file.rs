@@ -92,10 +92,10 @@ impl ConfigFile {
         self.get_bool(SETLOCALDEFS_KEY)
     }
 
-    /// Helper: interpret a boolean config value.
+    /// Get a key's value interpreted as a boolean.
     ///
     /// `"1"` / `"true"` → `Some(true)`, `"0"` / `"false"` → `Some(false)`,
-    /// anything else → `None`.  String matching is case-insensitive.
+    /// anything else → `None`.  Matching is case-insensitive.
     #[must_use]
     pub fn get_bool(&self, key: &str) -> Option<bool> {
         self.get(key).and_then(|v| match v.to_ascii_lowercase().as_str() {

@@ -221,3 +221,11 @@ fn test_parse_known_keys_list() {
     assert!(cfg.contains("CUSTOMKEY"));
     assert_eq!(cfg.get("CUSTOMKEY"), Some("somevalue"));
 }
+
+/// Lenient parser: any text is valid (even binary). Validation is separate.
+#[test]
+fn test_parse_lenient_accepts_any_input() {
+    assert!(ConfigFile::parse("").is_ok());
+    assert!(ConfigFile::parse("random text without equals").is_ok());
+    assert!(ConfigFile::parse(&"x".repeat(1_000_000)).is_ok());
+}
