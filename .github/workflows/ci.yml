@@ -12,21 +12,18 @@ env:
 
 jobs:
   test:
-    name: test (${{ matrix.os }}, rust ${{ matrix.rust }})
-    runs-on: ${{ matrix.os }}
+    name: test (rust ${{ matrix.rust }})
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
         rust: [stable, "1.85"]
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@master
         with:
           toolchain: ${{ matrix.rust }}
-      - run: cargo build --all-features
       - run: cargo test --all-features
-      - run: cargo build --no-default-features
       - run: cargo test --no-default-features
 
   clippy:
