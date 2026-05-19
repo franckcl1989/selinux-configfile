@@ -21,6 +21,9 @@ target
 #.idea/
 
 
+# Library crate: Cargo.lock should not be committed
+Cargo.lock
+
 # Added by cargo
 
 /target

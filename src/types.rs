@@ -41,15 +41,18 @@ impl FromStr for SelinuxMode {
     }
 }
 
-/// Standard SELinux config key names.
+/// The `SELINUX` key — controls enforcement mode
+/// ([`enforcing`](SelinuxMode::Enforcing), [`permissive`](SelinuxMode::Permissive),
+/// [`disabled`](SelinuxMode::Disabled)).
 pub const SELINUX_KEY: &str = "SELINUX";
-/// Standard key name for [`SELINUXTYPE`](SELINUXTYPE_KEY).
+/// The `SELINUXTYPE` key — policy type name (e.g., `"targeted"`, `"mls"`).
 pub const SELINUXTYPE_KEY: &str = "SELINUXTYPE";
-/// Standard key name for [`REQUIRESEUSERS`](REQUIRESEUSERS_KEY).
+/// The `REQUIRESEUSERS` key — whether SELinux users are required (`"0"` / `"1"`).
 pub const REQUIRESEUSERS_KEY: &str = "REQUIRESEUSERS";
-/// Standard key name for [`AUTORELABEL`](AUTORELABEL_KEY).
+/// The `AUTORELABEL` key — whether to auto-relabel on boot (`"0"` / `"1"`).
 pub const AUTORELABEL_KEY: &str = "AUTORELABEL";
-/// Standard key name for [`SETLOCALDEFS`](SETLOCALDEFS_KEY).
+/// The `SETLOCALDEFS` key — deprecated; loads local booleans/users
+/// (`"0"` / `"1"`).
 pub const SETLOCALDEFS_KEY: &str = "SETLOCALDEFS";
 
 /// Default SELinux policy type.
